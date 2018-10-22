@@ -56,11 +56,6 @@ class Xinca(object):
             'User-Agent': 'PyXinca and Zuludesk API Wrapper/1.0',
             'X-Server-Protocol-Version': '3',
         }
-        self.kwargs = {
-            'headers': self.headers,
-        }
-        if timeout:
-            self.kwargs['timeout'] = timeout
 
         self.base_url = '{}'.format(server)
         self.url = self.base_url
@@ -79,31 +74,7 @@ class Xinca(object):
         self.users = records.Users(self)
         self.groups = records.Groups(self)
         self.profiles = records.Profiles(self)
-
-    @staticmethod
-    def _get_querystring(params=None):
-        """
-        Return dictionary data encoded as URL params
-        """
-        if not params:
-            return ''
-        return '?{}'.format(urlencode(params))
-
-    def build_url(self, path, params=None):
-        """
-        Generate URL path, supporting custom API routes.
-
-        :param path: Path to resource (/devices, or /apps)
-        :param params: Data to send as query parameters
-        :type path: str
-        :type params: dict
-
-        """
-        return '{url}/{path}{query_params}'.format(
-            url=self.url,
-            path=path,
-            query_params=self._get_querystring(params)
-        )
+        self.ibeacons = records.iBeacons(self)
 
     def http_list(self, path, params=None, **kwargs):
         """Make a GET request to the Xinca server.
@@ -117,7 +88,8 @@ class Xinca(object):
         """
         params = params or {}
         response = self.http_request(
-            'get', path,
+            verb=GET,
+            path=path,
             params=params,
             **kwargs)
 
@@ -135,7 +107,8 @@ class Xinca(object):
         """
         params = params or {}
         response = self.http_request(
-            'get', path,
+            verb=GET,
+            path=path,
             params=params,
             **kwargs)
 
@@ -156,7 +129,8 @@ class Xinca(object):
         params = params or {}
         post_data = post_data or {}
         response = self.http_request(
-            'post', path,
+            verb=POST,
+            path=path,
             params=params,
             post_data=post_data,
             **kwargs)
@@ -178,7 +152,8 @@ class Xinca(object):
         params = params or {}
         post_data = post_data or {}
         response = self.http_request(
-            'put', path,
+            verb=PUT,
+            path=path,
             params=params,
             post_data=post_data,
             **kwargs)
@@ -191,7 +166,7 @@ class Xinca(object):
         :param path: Path to resource (/devices/<udid>, or /apps/<id>)
         :type path: str
         """
-        return self.http_request('delete', path, **kwargs)
+        return self.http_request(DELETE, path, **kwargs)
 
     def http_request(self, verb, path, params=None, post_data=None, **kwargs):
         """Make an HTTP request to the Xinca server.
