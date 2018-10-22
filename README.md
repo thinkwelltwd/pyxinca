@@ -15,7 +15,7 @@ Consult the [Xinca / ZuluDesk REST API documentation](https://apiv6.xincamdm.com
 Install by cloning the repo and run `setup.py`.
 
 ```bash
-$ python setup.py install --user
+$ python3 setup.py install
 ```
 
 ## Add an API user

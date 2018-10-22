@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function
-import json
 import requests
 from requests.auth import HTTPBasicAuth
 
@@ -188,7 +187,7 @@ class Xinca(object):
         request = requests.Request(
             verb, url,
             params=params,
-            data=json.dumps(post_data),
+            data=post_data,
             headers=self.headers,
         )
 
